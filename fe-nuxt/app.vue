@@ -3,9 +3,34 @@
         <table class="table border-t border border-gray-200">
             <thead>
                 <tr>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Position</th>
+                    <th @click="doSort('firstName')" class="cursor-pointer">
+                        <span class="flex items-center">
+                            <span>Firstname</span>
+                            <template v-if="sortby == 'firstName'">
+
+                                <ArrowUp class="h-4" v-if="order == 'asc'" />
+                                <ArrowDown class="h-4" v-if="order == 'desc'" />
+                            </template>
+                        </span>
+                    </th>
+                    <th @click="doSort('lastName')" class="cursor-pointer">
+                        <span class="flex items-center">
+                            <span>Lastname</span>
+                            <template v-if="sortby == 'lastName'">
+                                <ArrowUp class="h-4" v-if="order == 'asc'" />
+                                <ArrowDown class="h-4" v-if="order == 'desc'" />
+                            </template>
+                        </span>
+                    </th>
+                    <th @click="doSort('position')" class="cursor-pointer">
+                        <span class="flex items-center">
+                            <span>Position</span>
+                            <template v-if="sortby == 'position'">
+                                <ArrowUp class="h-4" v-if="order == 'asc'" />
+                                <ArrowDown class="h-4" v-if="order == 'desc'" />
+                            </template>
+                        </span>
+                    </th>
                     <th>Phone</th>
                     <th>Email</th>
                 </tr>
@@ -36,23 +61,32 @@ const page = ref(route.query.page ? parseInt(route.query.page as string) : 1);
 const limit = ref<string>(route.query.limit as string || '10');
 
 const { first, last, next, prev, total_page, total } = storeToRefs(UserStore);
+const sortby = ref<'firstName' | 'lastName' | 'position'>(route.query.sortby ? route.query.sortby : 'firstName');
+const order = ref<string>(route.query.order ? route.query.order : 'asc');
 
 const getData = async (initial = false) => {
     const _page = parseInt(page.value);
     const _limit = parseInt(limit.value);
 
-    console.log({ _limit })
-    console.log({ _page })
-
     if (!initial) {
         updateQuery({
             limit: _limit,
             page: _page,
+            sortby: sortby.value,
+            order: order.value,
         });
     }
 
+    UserStore.get(_page, _limit, sortby.value, order.value);
+}
 
-    UserStore.get(_page, _limit);
+const doSort = (by: string) => {
+    const currentSort = sortby.value;
+    const currentOrder = order.value;
+    order.value = currentSort == by ? (currentOrder == 'asc' ? 'desc' : 'asc') : 'asc';
+    sortby.value = by;
+
+    getData();
 }
 
 // Updates the URL query parameters with the provided new query object.

@@ -41,8 +41,8 @@ export const useUserStore = defineStore("user", {
         total: (state): number => state.data ? state.data.total : 0,
     },
     actions: {
-        async get(page: number, limit: number): Promise<void> {
-            const response = await Api.get(`/users?page=${page}&limit=${limit}`) as Pagination<User>
+        async get(page: number, limit: number, sortby: 'firstName' | 'lastName' | 'position' = 'firstName', order: 'asc' | 'desc' = 'asc'): Promise<void> {
+            const response = await Api.get(`/users?page=${page}&limit=${limit}&sortby=${sortby}&order=${order}`) as Pagination<User>
             this.data = response;
         }
     }
