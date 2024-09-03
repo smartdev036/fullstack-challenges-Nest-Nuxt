@@ -26,14 +26,15 @@ export class UsersService {
             },
         });
 
-        const lastPage = Math.ceil(total / limit);
+        const total_page = Math.ceil(total / limit);
 
         const data: Pagination<User> = {
-            first: 1,
-            last: lastPage,
-            next: page < lastPage ? page + 1 : null,
+            first: (page - 1) * limit + 1,
+            last: (page - 1) * limit + limit,
+            next: page < total_page ? page + 1 : null,
             prev: page > 1 ? page - 1 : null,
             total,
+            total_page,
             page,
             data: users
         }

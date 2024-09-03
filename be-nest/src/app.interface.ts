@@ -4,6 +4,7 @@ export interface Pagination<T> {
     next: number
     prev: number
     page: number
+    total_page: number
     total: number
     data: T[]
 }
