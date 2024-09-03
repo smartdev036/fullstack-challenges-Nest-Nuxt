@@ -1,0 +1,7 @@
+version: "3.8"
+# services / containers
+services:
+  # nuxt app
+  web-ambisius-putera:
+    environment:
+      NUXT_PUBLIC_API_URI: https://api.ambisius.udaputera.com

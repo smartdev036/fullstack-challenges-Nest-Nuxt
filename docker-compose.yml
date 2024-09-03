@@ -1,0 +1,51 @@
+version: "3.8"
+# services / containers
+services:
+  # nuxt app
+  web-ambisius-putera:
+    build:
+      context: ./fe-nuxt
+      dockerfile: Dockerfile
+    container_name: web-ambisius-putera
+    image: web-ambisius-putera:0.0.3
+    restart: always
+    ports:
+      - 3044:3000
+    networks:
+      - ambisius-putera-network
+    environment:
+      NUXT_PUBLIC_API_URI: http://localhost:5044
+  # nest app
+  be-ambisius-putera:
+    build:
+      context: ./be-nest
+      dockerfile: Dockerfile
+    container_name: be-ambisius-putera
+    image: be-ambisius-putera:0.0.4
+    restart: always
+    ports:
+      - 5044:5003
+    environment:
+      # for prisma
+      DATABASE_URL: postgresql://postgres:postgres@postgre-ambisius-putera:5432/mydb?schema=ambisius-putera
+    networks:
+      - ambisius-putera-network
+    depends_on:
+      - postgre-ambisius-putera
+
+  # postgre database
+  postgre-ambisius-putera:
+    container_name: postgre-ambisius-putera
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    networks:
+      - ambisius-putera-network
+
+# networks
+networks:
+  ambisius-putera-network:
+    name: ambisius-putera-network
+    driver: bridge

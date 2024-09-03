@@ -6,7 +6,7 @@ async function bootstrap() {
 
     // CORS
     app.enableCors({
-        origin: ['http://localhost:3000', 'http://localhost:3001'],
+        origin: ['http://localhost:3000', 'http://localhost:3044', 'https://ambisius.udaputera.com'],
         credentials: true
     });
 

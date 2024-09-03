@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            apiUri: "http://localhost:5003",
+            apiUri: "",
         },
     },
 })
