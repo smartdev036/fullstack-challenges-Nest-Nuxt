@@ -12,7 +12,7 @@ export class UsersController {
     @Post()
     async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto): Promise<User> {
         try {
-            const find = await this.usersService.findByEmail(createUserDto.email);
+            const find = await this.usersService.findByEmail(createUserDto.email.toLowerCase());
 
             if (find) throw new ConflictException('Email address is not unique');
 
@@ -24,17 +24,12 @@ export class UsersController {
 
     @Get()
     findAll(
-        @Query('page') page: number,
-        @Query('limit') limit: number,
-        @Query('sortby') sortBy: 'firstName' | 'lastName' | 'position',
-        @Query('order') order: 'asc' | 'desc'
+        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('sortby', new DefaultValuePipe('firstName')) sortBy: 'firstName' | 'lastName' | 'position',
+        @Query('order', new DefaultValuePipe('asc')) order: 'asc' | 'desc'
     ): Promise<Pagination<User>> {
         try {
-            limit = limit ? +limit : 10;
-            page = page ? +page : 1;
-            sortBy = sortBy || 'firstName';
-            order = order || 'asc';
-
             return this.usersService.findAll(page, limit, sortBy, order);
         } catch (error) {
             throw error;
@@ -60,6 +55,15 @@ export class UsersController {
 
             if (!user) throw new NotFoundException('User not found!');
 
+            if (updateUserDto.email && user.email !== updateUserDto.email) {
+                updateUserDto.email = updateUserDto.email.toLowerCase();
+                if (user.email !== updateUserDto.email) {
+                    const find = await this.usersService.findByEmail(updateUserDto.email);
+
+                    if (find) throw new ConflictException('Email address is not unique');
+                }
+            }
+
             return this.usersService.update(id, updateUserDto);
         } catch (error) {
             throw error;
@@ -68,8 +72,12 @@ export class UsersController {
 
     @Delete(':id')
     @HttpCode(204)
-    remove(@Param('id') id: string) {
+    async remove(@Param('id') id: string) {
         try {
+            const user = await this.usersService.findOne(id);
+
+            if (!user) throw new NotFoundException('User not found!');
+
             return this.usersService.remove(id);
         } catch (error) {
             throw error;

@@ -24,7 +24,7 @@ async function main() {
             firstName,
             lastName,
             position: positions[Math.floor(Math.random() * positions.length)],
-            email: faker.internet.email({ firstName, lastName }),
+            email: faker.internet.email({ firstName, lastName }).toLowerCase(),
             phone: phoneNumber()
         }
 
