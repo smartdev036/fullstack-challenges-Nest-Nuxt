@@ -1,5 +1,16 @@
 <template>
     <div class="flex flex-col gap-4 p-6">
+        <div class="flex justify-end gap-4">
+            <button @click="UserStore.insert">
+                <IconsPlus class="h-6" />
+            </button>
+            <button @click="UserStore.save">
+                <IconsSave class="h-6" />
+            </button>
+            <button>
+                <IconsUndo class="h-6" />
+            </button>
+        </div>
         <table class="table border-t border border-gray-200">
             <thead>
                 <tr>
@@ -8,8 +19,8 @@
                             <span>Firstname</span>
                             <template v-if="sortby == 'firstName'">
 
-                                <ArrowUp class="h-4" v-if="order == 'asc'" />
-                                <ArrowDown class="h-4" v-if="order == 'desc'" />
+                                <IconsArrowUp class="h-4" v-if="order == 'asc'" />
+                                <IconsArrowDown class="h-4" v-if="order == 'desc'" />
                             </template>
                         </span>
                     </th>
@@ -17,8 +28,8 @@
                         <span class="flex items-center">
                             <span>Lastname</span>
                             <template v-if="sortby == 'lastName'">
-                                <ArrowUp class="h-4" v-if="order == 'asc'" />
-                                <ArrowDown class="h-4" v-if="order == 'desc'" />
+                                <IconsArrowUp class="h-4" v-if="order == 'asc'" />
+                                <IconsArrowDown class="h-4" v-if="order == 'desc'" />
                             </template>
                         </span>
                     </th>
@@ -26,24 +37,19 @@
                         <span class="flex items-center">
                             <span>Position</span>
                             <template v-if="sortby == 'position'">
-                                <ArrowUp class="h-4" v-if="order == 'asc'" />
-                                <ArrowDown class="h-4" v-if="order == 'desc'" />
+                                <IconsArrowUp class="h-4" v-if="order == 'asc'" />
+                                <IconsArrowDown class="h-4" v-if="order == 'desc'" />
                             </template>
                         </span>
                     </th>
                     <th>Phone</th>
                     <th>Email</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <template v-for="user in UserStore.users" :key="user.id">
-                    <tr>
-                        <td>{{ user.firstName }}</td>
-                        <td>{{ user.lastName }}</td>
-                        <td>{{ user.position }}</td>
-                        <td>{{ user.phone }}</td>
-                        <td>{{ user.email }}</td>
-                    </tr>
+                <template v-for="(user, i) in UserStore.users" :key="i">
+                    <UserRow :user="user" />
                 </template>
             </tbody>
         </table>
