@@ -1,13 +1,14 @@
 <template>
     <div class="flex flex-col gap-4 p-6">
-        <div class="flex justify-end gap-4">
-            <button @click="UserStore.insert">
+        <div class="flex items-center gap-4">
+            <div class="grow text-2xl font-bold">User Management</div>
+            <button @click="UserStore.insert" class="btn btn-circle">
                 <IconsPlus class="h-6" />
             </button>
-            <button @click="UserStore.save">
+            <button @click="UserStore.save" class="btn btn-circle">
                 <IconsSave class="h-6" />
             </button>
-            <button>
+            <button class="btn btn-circle" @click="reset">
                 <IconsUndo class="h-6" />
             </button>
         </div>
@@ -114,4 +115,12 @@ watch(() => limit.value, (newLimit) => {
 
 // initial fetch
 getData(true);
+
+const reset = () => {
+    sortby.value = 'firstName';
+    order.value = 'asc';
+    page.value = 1
+    limit.value = 10;
+    getData();
+}
 </script>
