@@ -23,16 +23,23 @@ export class UsersController {
     }
 
     @Get()
-    findAll(@Query('page') page: number, @Query('limit') limit: number): Promise<Pagination<User>> {
+    findAll(
+        @Query('page') page: number,
+        @Query('limit') limit: number,
+        @Query('sortby') sortBy: 'firstName' | 'lastName' | 'position',
+        @Query('order') order: 'asc' | 'desc'
+    ): Promise<Pagination<User>> {
         try {
             limit = limit ? +limit : 10;
             page = page ? +page : 1;
-            return this.usersService.findAll(page, limit);
+            sortBy = sortBy || 'firstName';
+            order = order || 'asc';
+
+            return this.usersService.findAll(page, limit, sortBy, order);
         } catch (error) {
             throw error;
         }
     }
-
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<User> {
         try {

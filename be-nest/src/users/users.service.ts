@@ -13,7 +13,7 @@ export class UsersService {
         return this.Prisma.user.create({ data });
     }
 
-    async findAll(page: number, limit: number): Promise<Pagination<User>> {
+    async findAll(page: number, limit: number, sortBy: 'firstName' | 'lastName' | 'position' = 'firstName', order: 'asc' | 'desc' = 'asc'): Promise<Pagination<User>> {
         const total = await this.Prisma.user.count();
         const skip = (page - 1) * limit;
         const take = limit;
@@ -22,7 +22,7 @@ export class UsersService {
             skip,
             take,
             orderBy: {
-                id: 'asc',
+                [sortBy]: order,
             },
         });
 
