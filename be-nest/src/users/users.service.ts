@@ -10,10 +10,6 @@ export class UsersService {
     ) { }
 
     async create(data: Prisma.UserCreateInput): Promise<User> {
-        const find = await this.findByEmail(data.email);
-
-        if (find) throw new ConflictException('Email already exists');
-
         return this.Prisma.user.create({ data });
     }
 
@@ -45,14 +41,10 @@ export class UsersService {
         return data;
     }
 
-    async findOne(id: string): Promise<User> {
-        const user = await this.Prisma.user.findUnique({
-            where: { id }
+    findOne(id: string): Promise<User> {
+        return this.Prisma.user.findUnique({
+            where: { id, deleted: false }
         });
-
-        if (user) throw new NotFoundException('User not found!');
-
-        return user;
     }
 
     findByEmail(email: string): Promise<User> {

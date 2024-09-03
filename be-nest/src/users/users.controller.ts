@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ValidationPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ValidationPipe, Query, ConflictException, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,9 +10,16 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
     @Post()
-    create(@Body(new ValidationPipe()) createUserDto: CreateUserDto): Promise<User> {
+    async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto): Promise<User> {
+        try {
+            const find = await this.usersService.findByEmail(createUserDto.email);
 
-        return this.usersService.create(createUserDto);
+            if (find) throw new ConflictException('Email address is not unique');
+
+            return this.usersService.create(createUserDto);
+        } catch (error) {
+            throw error;
+        }
     }
 
     @Get()
@@ -27,17 +34,25 @@ export class UsersController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string): Promise<User> {
+    async findOne(@Param('id') id: string): Promise<User> {
         try {
-            return this.usersService.findOne(id);
+            const user = await this.usersService.findOne(id);
+
+            if (!user) throw new NotFoundException('User not found!');
+
+            return user;
         } catch (error) {
             throw error;
         }
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body(new ValidationPipe()) updateUserDto: UpdateUserDto): Promise<User> {
+    async update(@Param('id') id: string, @Body(new ValidationPipe()) updateUserDto: UpdateUserDto): Promise<User> {
         try {
+            const user = await this.usersService.findOne(id);
+
+            if (!user) throw new NotFoundException('User not found!');
+
             return this.usersService.update(id, updateUserDto);
         } catch (error) {
             throw error;
