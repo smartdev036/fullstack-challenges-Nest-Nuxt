@@ -9,6 +9,10 @@ export class CreateUserDto {
     @Length(1, 25)
     lastName: string
 
+    @IsString()
+    @Length(1, 25)
+    position: string
+
     @IsEmail()
     @Length(1, 100)
     email: string

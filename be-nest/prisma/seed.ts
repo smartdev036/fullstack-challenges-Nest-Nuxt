@@ -14,6 +14,8 @@ function phoneNumber() {
 async function main() {
     console.log('\nSeed Start: User');
 
+    const positions = ['Manager', 'Developer', 'Designer', 'QA', 'Scrum Master'];
+
     for (let n = 0; n < 100; n++) {
         process.stdout.write('.');
         const firstName = faker.person.firstName();
@@ -21,6 +23,7 @@ async function main() {
         const user: Prisma.UserCreateInput = {
             firstName,
             lastName,
+            position: positions[Math.floor(Math.random() * positions.length)],
             email: faker.internet.email({ firstName, lastName }),
             phone: phoneNumber()
         }
