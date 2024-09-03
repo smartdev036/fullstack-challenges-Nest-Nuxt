@@ -10,4 +10,12 @@ export default defineNuxtConfig({
         },
     },
     modules: ['@pinia/nuxt'],
+    imports: {
+        dirs: ["types/*.ts", "types/**/*.ts", "store/*.ts"],
+    },
+    runtimeConfig: {
+        public: {
+            apiUri: "http://localhost:5003",
+        },
+    },
 })
