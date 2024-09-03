@@ -1,7 +1,7 @@
 # compiled output
-be-nest/dist
-be-nest/node_modules
-be-nest/build
+/be-nest/dist
+/be-nest/node_modules
+/be-nest/build
 
 # Logs
 logs
@@ -16,8 +16,8 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-be-nest/coverage
-be-nest/.nyc_output
+/be-nest/coverage
+/be-nest/.nyc_output
 
 # IDEs and editors
 /.idea
@@ -54,3 +54,13 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+
+# FRONT END
+/fe-nuxt/.output
+/fe-nuxt/.data
+/fe-nuxt/.nuxt
+/fe-nuxt/.nitro
+/fe-nuxt/.cache
+/fe-nuxt/node_modules
+/fe-nuxt/dist
