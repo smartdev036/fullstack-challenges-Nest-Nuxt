@@ -49,16 +49,36 @@ You can view the live version of the application at: [https://ambisius.udaputera
 
 3. **Access via local:**
 
+   #### WEB
+
    ```
     http://localhost:3044
    ```
 
    You can view the local version of the application at: [http://localhost:3044](http://localhost:3044)
 
+   #### API Documentation
+
+   ```
+   http://localhost:5003
+   ```
+
+   You can view the local version of api documentation at: [http://localhost:5003](http://localhost:5003)
+
 4. **Access via live:**
+
+   #### WEB
 
    ```
    https://ambisius.udaputera.com
    ```
 
    You can view the live version of the application at: [https://ambisius.udaputera.com](https://ambisius.udaputera.com)
+
+   #### API Documentation
+
+   ```
+   http://api.ambisius.udaputera.com
+   ```
+
+   You can view the local version of api documentation at: [http://api.ambisius.udaputera.com](http://api.ambisius.udaputera.com)
