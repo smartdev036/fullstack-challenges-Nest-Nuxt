@@ -25,12 +25,14 @@ export interface Pagination<T> {
 
 interface UserState {
     data?: Pagination<User>
+    update_data: Record<string, any>[]
 }
 
 
 export const useUserStore = defineStore("user", {
     state: (): UserState => ({
-        data: undefined
+        data: undefined,
+        update_data: []
     }),
     getters: {
         users: (state): User[] => state.data ? state.data.data : [],
@@ -45,7 +47,7 @@ export const useUserStore = defineStore("user", {
     actions: {
         insert() {
             const user: User = {
-                id: undefined,
+                id: Date.now() + "",
                 firstName: '',
                 lastName: '',
                 position: '',
@@ -56,6 +58,7 @@ export const useUserStore = defineStore("user", {
             };
 
             this.users.unshift(user);
+            this.update_data.unshift(user);
         },
         async get(page: number, limit: number, sortby: 'firstName' | 'lastName' | 'position' = 'firstName', order: 'asc' | 'desc' = 'asc'): Promise<void> {
             const response = await Api.get(`/users?page=${page}&limit=${limit}&sortby=${sortby}&order=${order}`) as Pagination<User>
@@ -68,14 +71,16 @@ export const useUserStore = defineStore("user", {
             this.data = response;
         },
         async save() {
-            const users = this.users.filter(user => user.status != null);
+            for (let user of this.update_data) {
+                let user_index = this.users.findIndex(u => u.id == user.id);
+                let user_data = this.users[user_index];
 
-            for (const user of users) {
+                if (!user_data) continue;
                 try {
-                    user.isLoading = true;
+                    user_data.isLoading = true;
 
                     // delay simulation
-                    await new Promise(resolve => setTimeout(resolve, 300)); // Add 1 second delay
+                    await new Promise(resolve => setTimeout(resolve, 300)); // Add 300 ms delay
 
                     let postData: Record<string, any> = {
                         firstName: user.firstName,
@@ -87,43 +92,48 @@ export const useUserStore = defineStore("user", {
 
                     postData = this.validate(postData);
 
-                    // Update the user's data based on the state
-                    if (user.status == 'edited') {
-                        await Api.patch(`/users/${user.id}`, postData);
+                    let updated: User;
+                    if (user_data.status == 'edited') {
+                        updated = await Api.patch(`/users/${user.id}`, postData) as User;
+
                     }
 
-                    if (user.status == 'new') {
-                        await Api.post('/users', postData);
+                    if (user_data.status == 'new') {
+                        updated = await Api.post('/users', postData) as User;
                     }
 
-                    user.status = null;
-                    user.isLoading = false;
-
+                    // Update the user's data based on the state index
+                    this.users[user_index] = {
+                        ...updated!,
+                        status: null,
+                        isLoading: false
+                    }
                 } catch (error: any) {
                     if (error instanceof Joi.ValidationError) {
                         const e = error.details.map((err: any) => ({
                             [err.context.key]: err.message
                         }));
-                        user.errors = e.reduce((key, value) => { return { ...key, ...value } }, {});
+                        user_data.errors = e.reduce((key, value) => { return { ...key, ...value } }, {});
 
                         // reset errors after 2 seconds
                         setTimeout(() => {
-                            user.errors = undefined;
+                            user_data!.errors = undefined;
+                            user_data!.isLoading = false;
                         }, 2000);
                     } else {
                         if (error.status == 409) {
-                            user.errors = {
+                            user_data.errors = {
                                 email: 'Email address is not unique'
                             };
                         }
                         // reset errors after 2 seconds
                         setTimeout(() => {
-                            user.errors = undefined;
+                            user_data!.errors = undefined;
+                            user_data!.isLoading = false;
                         }, 2000);
                     }
                 } finally {
-                    user.isLoading = false;
-
+                    this.update_data = [];
                 }
             }
         },

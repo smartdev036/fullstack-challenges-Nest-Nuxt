@@ -1,6 +1,6 @@
 <template>
     <div v-if="user.errors.hasOwnProperty(name)"
-        class="absolute z-20 bg-error text-white rounded-lg shadow p-2 -bottom-8">
+        class="absolute z-20 bg-error text-white rounded-lg shadow p-2 -bottom-12">
         {{ user.errors[name] }}
     </div>
 </template>
