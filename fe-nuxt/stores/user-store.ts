@@ -23,11 +23,13 @@ export interface Pagination<T> {
     data: T[]
 }
 
+export type SortByOption = 'firstName' | 'lastName' | 'position';
+export type OrderByOption = 'asc' | 'desc';
+
 interface UserState {
     data?: Pagination<User>
     update_data: Record<string, any>[]
 }
-
 
 export const useUserStore = defineStore("user", {
     state: (): UserState => ({
@@ -60,7 +62,13 @@ export const useUserStore = defineStore("user", {
             this.users.unshift(user);
             this.update_data.unshift(user);
         },
-        async get(page: number, limit: number, sortby: 'firstName' | 'lastName' | 'position' = 'firstName', order: 'asc' | 'desc' = 'asc'): Promise<void> {
+        async get(page: number, limit: number, sortby: SortByOption = 'firstName', order: OrderByOption = 'asc'): Promise<void> {
+            // reset state
+            this.data = undefined;
+
+            // delay simulation
+            await new Promise(resolve => setTimeout(resolve, 300)); // Add 300 ms delay
+
             const response = await Api.get(`/users?page=${page}&limit=${limit}&sortby=${sortby}&order=${order}`) as Pagination<User>
 
             for (const user of response.data) {

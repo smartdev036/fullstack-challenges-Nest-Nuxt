@@ -7,7 +7,7 @@ services:
       context: ./fe-nuxt
       dockerfile: Dockerfile
     container_name: web-ambisius-putera
-    image: web-ambisius-putera:0.0.7
+    image: web-ambisius-putera:0.0.8
     restart: always
     ports:
       - 3044:3000

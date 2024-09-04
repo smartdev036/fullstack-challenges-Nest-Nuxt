@@ -49,14 +49,15 @@
                 </tr>
             </thead>
             <tbody>
-                <template v-for="(user, i) in UserStore.users" :key="i">
+                <template v-if="UserStore.data" v-for="(user, i) in UserStore.users" :key="i">
                     <UserRow :user="user" />
                 </template>
+                <UserRowSkeleton v-else :limit="limit" />
             </tbody>
         </table>
 
-        <Pagination :first :last :next :prev :page :total_page :total v-model:limit="limit"
-            @prev="page = prev; getData()" @next="page = next; getData()" />
+        <Pagination :first :last :next :prev :page :total_page :total v-model:limit="limit" @prev="prevPage"
+            @next="nextPage" />
     </div>
 </template>
 
@@ -64,16 +65,17 @@
 const UserStore = useUserStore();
 
 const route = useRoute();
-const page = ref(route.query.page ? parseInt(route.query.page as string) : 1);
-const limit = ref<string>(route.query.limit as string || '10');
+const page = ref<number>(route.query.page ? parseInt(route.query.page as string) : 1);
+const limit = ref<number>(parseInt(route.query.limit as string) || 10);
 
 const { first, last, next, prev, total_page, total } = storeToRefs(UserStore);
-const sortby = ref<'firstName' | 'lastName' | 'position'>(route.query.sortby ? route.query.sortby : 'firstName');
-const order = ref<string>(route.query.order ? route.query.order : 'asc');
+
+const sortby = ref<SortByOption>(route.query.sortby as SortByOption || 'firstName');
+const order = ref<OrderByOption>(route.query.order ? route.query.order as OrderByOption : 'asc');
 
 const getData = async (initial = false) => {
-    const _page = parseInt(page.value);
-    const _limit = parseInt(limit.value);
+    const _page = page.value;
+    const _limit = limit.value;
 
     if (!initial) {
         updateQuery({
@@ -87,13 +89,27 @@ const getData = async (initial = false) => {
     UserStore.get(_page, _limit, sortby.value, order.value);
 }
 
-const doSort = (by: string) => {
+const doSort = (by: 'firstName' | 'lastName' | 'position') => {
     const currentSort = sortby.value;
     const currentOrder = order.value;
     order.value = currentSort == by ? (currentOrder == 'asc' ? 'desc' : 'asc') : 'asc';
     sortby.value = by;
 
     getData();
+}
+
+const prevPage = () => {
+    if (prev.value) {
+        page.value = prev.value;
+        getData();
+    }
+}
+
+const nextPage = () => {
+    if (next.value) {
+        page.value = next.value;
+        getData();
+    }
 }
 
 // Updates the URL query parameters with the provided new query object.
