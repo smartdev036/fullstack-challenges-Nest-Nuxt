@@ -21,7 +21,7 @@ services:
       context: ./be-nest
       dockerfile: Dockerfile
     container_name: be-ambisius-putera
-    image: be-ambisius-putera:0.0.6
+    image: be-ambisius-putera:0.0.7
     restart: always
     ports:
       - 5044:5003
