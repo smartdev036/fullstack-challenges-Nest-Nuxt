@@ -7,21 +7,26 @@ async function bootstrap() {
 
     const config = new DocumentBuilder()
         .setTitle('API Doc - Ambisius - Rizjami Putera')
-        .setDescription('Applying for [Hybrid Full-time] Frontend / Backend / Full Stack TypeScript Developer')
+        .setDescription(
+            'Applying for [Hybrid Full-time] Frontend / Backend / Full Stack TypeScript Developer',
+        )
         .setVersion('1.0')
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
 
-
     // CORS
     app.enableCors({
-        origin: ['http://localhost:3000', 'http://localhost:3044', 'https://ambisius.udaputera.com'],
-        credentials: true
+        origin: [
+            'http://localhost:3000',
+            'http://localhost:3044',
+            'https://ambisius.udaputera.com',
+        ],
+        credentials: true,
     });
 
-    const port = 5003
+    const port = 5003;
     await app.listen(port);
-    console.log(`App is running at http://localhost:${port}`)
+    console.log(`App is running at http://localhost:${port}`);
 }
 bootstrap();

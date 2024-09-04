@@ -1,5 +1,5 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { applyDecorators } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 export function CreateUserDoc() {
     return applyDecorators(
@@ -8,26 +8,26 @@ export function CreateUserDoc() {
             status: 200,
             description: 'Success',
             schema: {
-                example: exampleUser
-            }
+                example: exampleUser,
+            },
         }),
         ApiResponse({
             status: 400,
             description: 'Bad Request',
             schema: {
                 example: {
-                    "message": [
-                        "firstName must be longer than or equal to 1 characters",
-                        "lastName must be longer than or equal to 1 characters",
-                        "position must be longer than or equal to 1 characters",
-                        "email must be longer than or equal to 1 characters",
-                        "email must be an email",
-                        "phone must be longer than or equal to 1 characters"
+                    message: [
+                        'firstName must be longer than or equal to 1 characters',
+                        'lastName must be longer than or equal to 1 characters',
+                        'position must be longer than or equal to 1 characters',
+                        'email must be longer than or equal to 1 characters',
+                        'email must be an email',
+                        'phone must be longer than or equal to 1 characters',
                     ],
-                    "error": "Bad Request",
-                    "statusCode": 400
-                }
-            }
+                    error: 'Bad Request',
+                    statusCode: 400,
+                },
+            },
         }),
         ApiResponse({
             status: 409,
@@ -36,13 +36,12 @@ export function CreateUserDoc() {
                 example: {
                     statusCode: 409,
                     message: 'Email address is not unique',
-                    error: 'Conflict'
-                }
-            }
-        })
-    )
+                    error: 'Conflict',
+                },
+            },
+        }),
+    );
 }
-
 
 export function FindAllUserDoc() {
     return applyDecorators(
@@ -59,18 +58,35 @@ export function FindAllUserDoc() {
                     total: 2,
                     total_page: 1,
                     page: 1,
-                    data: [
-                        exampleUser,
-                        exampleUser2
-                    ]
-                }
-            }
+                    data: [exampleUser, exampleUser2],
+                },
+            },
         }),
-        ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number' }),
-        ApiQuery({ name: 'limit', required: false, type: Number, description: 'Number of items per page' }),
-        ApiQuery({ name: 'sortby', required: false, enum: ['firstName', 'lastName', 'position'], description: 'Sort by field' }),
-        ApiQuery({ name: 'order', required: false, enum: ['asc', 'desc'], description: 'Sort order' })
-    )
+        ApiQuery({
+            name: 'page',
+            required: false,
+            type: Number,
+            description: 'Page number',
+        }),
+        ApiQuery({
+            name: 'limit',
+            required: false,
+            type: Number,
+            description: 'Number of items per page',
+        }),
+        ApiQuery({
+            name: 'sortby',
+            required: false,
+            enum: ['firstName', 'lastName', 'position'],
+            description: 'Sort by field',
+        }),
+        ApiQuery({
+            name: 'order',
+            required: false,
+            enum: ['asc', 'desc'],
+            description: 'Sort order',
+        }),
+    );
 }
 
 export function FindOneUseDoc() {
@@ -80,21 +96,21 @@ export function FindOneUseDoc() {
             status: 200,
             description: 'Success',
             schema: {
-                example: exampleUser
-            }
+                example: exampleUser,
+            },
         }),
         ApiResponse({
             status: 404,
             description: 'Not Found',
             schema: {
                 example: {
-                    "message": "User not found!",
-                    "error": "Not Found",
-                    "statusCode": 404
-                }
-            }
-        })
-    )
+                    message: 'User not found!',
+                    error: 'Not Found',
+                    statusCode: 404,
+                },
+            },
+        }),
+    );
 }
 
 export function UpdateUserDoc() {
@@ -104,21 +120,21 @@ export function UpdateUserDoc() {
             status: 200,
             description: 'Success',
             schema: {
-                example: exampleUser
-            }
+                example: exampleUser,
+            },
         }),
         ApiResponse({
             status: 400,
             description: 'Bad Request',
             schema: {
                 example: {
-                    "message": [
-                        "firstName must be longer than or equal to 1 characters"
+                    message: [
+                        'firstName must be longer than or equal to 1 characters',
                     ],
-                    "error": "Bad Request",
-                    "statusCode": 400
-                }
-            }
+                    error: 'Bad Request',
+                    statusCode: 400,
+                },
+            },
         }),
         ApiResponse({
             status: 409,
@@ -127,22 +143,22 @@ export function UpdateUserDoc() {
                 example: {
                     statusCode: 409,
                     message: 'Email address is not unique',
-                    error: 'Conflict'
-                }
-            }
+                    error: 'Conflict',
+                },
+            },
         }),
         ApiResponse({
             status: 404,
             description: 'Not Found',
             schema: {
                 example: {
-                    "message": "User not found!",
-                    "error": "Not Found",
-                    "statusCode": 404
-                }
-            }
-        })
-    )
+                    message: 'User not found!',
+                    error: 'Not Found',
+                    statusCode: 404,
+                },
+            },
+        }),
+    );
 }
 
 export function DeleteUserDoc() {
@@ -154,13 +170,13 @@ export function DeleteUserDoc() {
             description: 'Not Found',
             schema: {
                 example: {
-                    "message": "User not found!",
-                    "error": "Not Found",
-                    "statusCode": 404
-                }
-            }
-        })
-    )
+                    message: 'User not found!',
+                    error: 'Not Found',
+                    statusCode: 404,
+                },
+            },
+        }),
+    );
 }
 
 const exampleUser = {
@@ -169,10 +185,10 @@ const exampleUser = {
     lastName: 'Doe',
     email: 'john@example.com',
     position: 'Developer',
-    phone: "(111) 111-1111",
+    phone: '(111) 111-1111',
     deleted: false,
-    createdAt: "2024-09-03T13:58:10.674Z",
-    updatedAt: "2024-09-03T13:58:10.674Z"
+    createdAt: '2024-09-03T13:58:10.674Z',
+    updatedAt: '2024-09-03T13:58:10.674Z',
 };
 
 const exampleUser2 = {
@@ -181,8 +197,8 @@ const exampleUser2 = {
     lastName: 'Johnson',
     email: 'david@example.com',
     position: 'CTO',
-    phone: "(111) 111-1111",
+    phone: '(111) 111-1111',
     deleted: false,
-    createdAt: "2024-09-03T13:58:10.674Z",
-    updatedAt: "2024-09-03T13:58:10.674Z"
+    createdAt: '2024-09-03T13:58:10.674Z',
+    updatedAt: '2024-09-03T13:58:10.674Z',
 };

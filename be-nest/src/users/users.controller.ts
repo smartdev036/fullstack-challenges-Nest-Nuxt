@@ -1,24 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ValidationPipe, Query, ConflictException, NotFoundException, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    HttpCode,
+    ValidationPipe,
+    Query,
+    ConflictException,
+    NotFoundException,
+    DefaultValuePipe,
+    ParseIntPipe,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@prisma/client';
 import { Pagination } from 'src/app.interface';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateUserDoc, DeleteUserDoc, FindAllUserDoc, FindOneUseDoc, UpdateUserDoc } from './users.doc';
+import {
+    CreateUserDoc,
+    DeleteUserDoc,
+    FindAllUserDoc,
+    FindOneUseDoc,
+    UpdateUserDoc,
+} from './users.doc';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) { }
+    constructor(private readonly usersService: UsersService) {}
 
     @CreateUserDoc()
     @Post()
-    async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto): Promise<User> {
+    async create(
+        @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+    ): Promise<User> {
         try {
-            const find = await this.usersService.findByEmail(createUserDto.email.toLowerCase());
+            const find = await this.usersService.findByEmail(
+                createUserDto.email.toLowerCase(),
+            );
 
-            if (find) throw new ConflictException('Email address is not unique');
+            if (find)
+                throw new ConflictException('Email address is not unique');
 
             return this.usersService.create(createUserDto);
         } catch (error) {
@@ -31,8 +57,9 @@ export class UsersController {
     findAll(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-        @Query('sortby', new DefaultValuePipe('firstName')) sortBy: 'firstName' | 'lastName' | 'position',
-        @Query('order', new DefaultValuePipe('asc')) order: 'asc' | 'desc'
+        @Query('sortby', new DefaultValuePipe('firstName'))
+        sortBy: 'firstName' | 'lastName' | 'position',
+        @Query('order', new DefaultValuePipe('asc')) order: 'asc' | 'desc',
     ): Promise<Pagination<User>> {
         try {
             return this.usersService.findAll(page, limit, sortBy, order);
@@ -57,7 +84,10 @@ export class UsersController {
 
     @UpdateUserDoc()
     @Patch(':id')
-    async update(@Param('id') id: string, @Body(new ValidationPipe()) updateUserDto: UpdateUserDto): Promise<User> {
+    async update(
+        @Param('id') id: string,
+        @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
+    ): Promise<User> {
         try {
             const user = await this.usersService.findOne(id);
 
@@ -66,9 +96,14 @@ export class UsersController {
             if (updateUserDto.email && user.email !== updateUserDto.email) {
                 updateUserDto.email = updateUserDto.email.toLowerCase();
                 if (user.email !== updateUserDto.email) {
-                    const find = await this.usersService.findByEmail(updateUserDto.email);
+                    const find = await this.usersService.findByEmail(
+                        updateUserDto.email,
+                    );
 
-                    if (find) throw new ConflictException('Email address is not unique');
+                    if (find)
+                        throw new ConflictException(
+                            'Email address is not unique',
+                        );
                 }
             }
 
