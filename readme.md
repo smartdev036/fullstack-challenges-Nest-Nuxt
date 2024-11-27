@@ -1,4 +1,4 @@
-# Rizjami Putera - Ambisius Challange
+#  Ambisius Challange
 
 ## Applying for [Hybrid Full-time] Frontend / Backend / Full Stack TypeScript Developer
 
@@ -35,10 +35,10 @@ You can view the live version of the application at: [https://ambisius.udaputera
 1. **Clone the repository:**
 
    ```bash
-   git clone git@github.com:putera-/3760e657-cbe7-47f2-9cb2-e6a3814b0464.git ambisius-putera
+   git clone [git@github.com:putera-/3760e657-cbe7-47f2-9cb2-e6a3814b0464.git](https://github.com/smartdev036/fullstack-challenges-Nest-Nuxt challengies_3918
 
 
-    cd ambisius-putera
+    cd challengies_3918
    ```
 
 2. **Run via Docker Compose:**
